@@ -1,65 +1,235 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { motion, useScroll, useTransform, AnimatePresence, Variants } from "framer-motion";
+import Link from "next/link";
 import Image from "next/image";
+import { couples } from "@/lib/data";
+import { ChevronRight, ChevronLeft } from "lucide-react";
+
+// Slide data for Hero
+const slides = [
+  { id: 1, image: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1920&auto=format&fit=crop", title: "Quiet", subtitle: "Luxury" },
+  { id: 2, image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1920&auto=format&fit=crop", title: "Cinematic", subtitle: "Moments" },
+  { id: 3, image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1920&auto=format&fit=crop", title: "Editorial", subtitle: "Elegance" },
+];
 
 export default function Home() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const { scrollYProgress } = useScroll();
+
+  // Parallax effects
+  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const aboutY = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
+
+  // Auto-advance slider
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+
+  // Stagger grid variants
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      }
+    }
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 20 }
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="bg-background">
+      {/* 1. HERO SLIDER */}
+      <section className="relative h-screen w-full overflow-hidden bg-black text-white">
+        <motion.div style={{ y: heroY }} className="absolute inset-0">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentSlide}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.2, ease: "easeInOut" }}
+              className="absolute inset-0"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${slides[currentSlide].image})` }}
+              />
+              <div className="absolute inset-0 bg-black/30" />
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Hero Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 1 }}
+          >
+            <h1 className="font-serif text-6xl md:text-8xl lg:text-9xl uppercase tracking-tighter mb-4">
+              <span className="block italic font-light">{slides[currentSlide].title}</span>
+              <span className="block font-bold">{slides[currentSlide].subtitle}</span>
+            </h1>
+            <p className="font-sans text-sm md:text-base uppercase tracking-[0.3em] mt-8 text-white/80">
+              Capturing Timeless Stories
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Slider Controls */}
+        <div className="absolute bottom-10 left-0 right-0 flex justify-between px-10 z-20">
+          <button onClick={prevSlide} className="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer">
+            <ChevronLeft size={32} strokeWidth={1} />
+          </button>
+
+          <div className="flex gap-4 items-center">
+            {slides.map((_, i) => (
+              <div
+                key={i}
+                className={`h-px transition-all duration-500 ${i === currentSlide ? "w-12 bg-white" : "w-4 bg-white/40"}`}
+              />
+            ))}
+          </div>
+
+          <button onClick={nextSlide} className="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer">
+            <ChevronRight size={32} strokeWidth={1} />
+          </button>
+        </div>
+      </section>
+
+      {/* 2. THE COUPLES GRID (Stories) */}
+      <section id="stories" className="py-32 px-6 md:px-12 max-w-[1600px] mx-auto">
+        <div className="mb-20">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="font-serif text-5xl md:text-7xl mb-6 tracking-wide"
+          >
+            Selected <span className="italic text-muted">Stories</span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-muted max-w-xl text-lg leading-relaxed"
+          >
+            A curated collection of editorial weddings, intimate elopements, and architectural portraiture designed with a fashion-forward lens.
+          </motion.p>
+        </div>
+
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-y-20 gap-x-12 lg:gap-x-24"
+        >
+          {couples.map((couple, index) => (
+            <motion.div key={couple.id} variants={itemVariants} className={`group ${index % 2 === 1 ? 'md:mt-32' : ''}`}>
+              <Link href={`/couples/${couple.id}`} className="block">
+                <div className="relative w-full aspect-[4/5] overflow-hidden bg-gray-100">
+                  <Image
+                    src={couple.coverImage}
+                    alt={couple.name}
+                    fill
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105 group-hover:blur-[2px]"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
+                </div>
+                <div className="mt-8 flex justify-between items-start">
+                  <div>
+                    <h3 className="font-serif text-3xl tracking-wide mb-2">{couple.name}</h3>
+                    <p className="text-sm uppercase tracking-widest text-muted">{couple.category}</p>
+                  </div>
+                  <span className="text-sm italic text-muted mt-2">{couple.location}</span>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </motion.div>
+      </section>
+
+      {/* 3. ABOUT & PROCESS (Makhno Studio Style Dark Mode) */}
+      <section id="process" className="relative dark-section py-40 px-6 md:px-12 overflow-hidden">
+        <div className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, #333 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-20 items-center relative z-10">
+
+          <motion.div
+            style={{ y: aboutY }}
+            className="w-full md:w-1/2"
+          >
+            <div className="relative aspect-[3/4] w-full max-w-md mx-auto overflow-hidden">
+              <Image
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop"
+                alt="Studio Process"
+                fill
+                className="object-cover grayscale contrast-125"
+              />
+            </div>
+          </motion.div>
+
+          <div className="w-full md:w-1/2 space-y-12">
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              <h2 className="font-serif text-5xl md:text-8xl leading-none mb-8 tracking-tighter">
+                The <br /> <span className="italic font-light text-[#A3A3A3]">Process.</span>
+              </h2>
+              <p className="text-[#A3A3A3] text-lg leading-relaxed max-w-lg mb-8">
+                We approach each commission with a meticulous eye for detail, drawing inspiration from high fashion and minimalist architecture. Our goal is to craft imagery that feels both timeless and inherently modern.
+              </p>
+
+              <ul className="space-y-6">
+                {['01. Consultation', '02. Curation', '03. Capture', '04. Cinematic Edit'].map((step, i) => (
+                  <li key={i} className="flex gap-6 items-center group">
+                    <span className="text-sm font-sans tracking-widest uppercase transition-colors group-hover:text-white text-[#A3A3A3]">
+                      {step}
+                    </span>
+                    <div className="h-px bg-white/10 flex-grow transition-all group-hover:bg-white/40" />
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+            >
+              <Link href="/contact" className="inline-block mt-12 border border-white/30 px-10 py-4 uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-colors duration-500">
+                Inquire Now
+              </Link>
+            </motion.div>
+          </div>
+
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </section>
     </div>
   );
 }
