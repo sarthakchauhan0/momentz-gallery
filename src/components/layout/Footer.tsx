@@ -34,7 +34,7 @@ export function Footer() {
 
             <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-[#A3A3A3]">
                 <p>© {new Date().getFullYear()} Momentz Gallery. All rights reserved.</p>
-                <p className="mt-4 md:mt-0 uppercase tracking-widest">Designed with Next.js & Motion</p>
+                <p className="mt-4 md:mt-0 uppercase tracking-widest">Designed with &#10084;&#65039; by Starky</p>
             </div>
         </footer>
     );

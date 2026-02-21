@@ -29,7 +29,7 @@ export default function Contact() {
                     </div>
                     <div>
                         <span className="block text-muted mb-2 text-xs">Studio</span>
-                        <p className="leading-relaxed">Based in London.<br />Available Worldwide.</p>
+                        <p className="leading-relaxed">Based in New Delhi.<br />Available Worldwide.</p>
                     </div>
                 </div>
             </motion.div>
@@ -54,6 +54,46 @@ export default function Contact() {
                         </div>
                     </div>
 
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
+                            <label htmlFor="email" className="block text-xs uppercase tracking-widest text-muted mb-2">Email Address</label>
+                            <input
+                                type="email"
+                                id="email"
+                                required
+                                pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
+                                title="Please enter a valid email address."
+                                className="w-full bg-transparent outline-none text-lg text-black placeholder-gray-300"
+                                placeholder="hello@example.com"
+                            />
+                        </div>
+                        <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
+                            <label htmlFor="phone" className="block text-xs uppercase tracking-widest text-muted mb-2">Phone Number</label>
+                            <div className="flex items-center">
+                                <select
+                                    className="bg-transparent outline-none text-lg text-black cursor-pointer appearance-none pr-4 mr-2 border-r border-gray-300"
+                                    defaultValue="+91"
+                                >
+                                    <option value="+91">+91 (IN)</option>
+                                    <option value="+1">+1 (CA)</option>
+                                    <option value="+1">+1 (US)</option>
+                                    <option value="+44">+44 (UK)</option>
+                                    <option value="+61">+61 (AU)</option>
+                                    <option value="+971">+971 (AE)</option>
+                                </select>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    required
+                                    pattern="[0-9]{10}"
+                                    title="Please enter exactly 10 digits."
+                                    className="w-full bg-transparent outline-none text-lg text-black placeholder-gray-300 pl-2"
+                                    placeholder="98765 43210"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
                         <label htmlFor="venue" className="block text-xs uppercase tracking-widest text-muted mb-2">Venue / Location</label>
                         <input type="text" id="venue" className="w-full bg-transparent outline-none text-lg text-black placeholder-gray-300" placeholder="Where is the magic happening?" />
@@ -62,9 +102,9 @@ export default function Contact() {
                     <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
                         <label htmlFor="budget" className="block text-xs uppercase tracking-widest text-muted mb-2">Estimated Coverage Budget</label>
                         <select id="budget" className="w-full bg-transparent outline-none text-lg text-black cursor-pointer appearance-none">
-                            <option value="Select">$5,000 - $10,000</option>
-                            <option value="10-15k">$10,000 - $15,000</option>
-                            <option value="15k+">$15,000+</option>
+                            <option value="Select">Under 1.5 Lakh</option>
+                            <option value="1.5-3L">₹1.5 Lakh - ₹3 Lakh</option>
+                            <option value="3L+">₹3 Lakh+</option>
                         </select>
                     </div>
 
