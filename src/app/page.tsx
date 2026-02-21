@@ -201,7 +201,7 @@ export default function Home() {
                 The <br /> <span className="italic font-light text-[#A3A3A3]">Process.</span>
               </h2>
               <p className="text-[#A3A3A3] text-lg leading-relaxed max-w-lg mb-8">
-                We approach each commission with a meticulous eye for detail, drawing inspiration from high fashion and minimalist architecture. Our goal is to craft imagery that feels both timeless and inherently modern.
+                We approach each commission with a meticulous eye for detail, drawing inspiration from high fashion and cinematic storytelling. Our goal is to craft imagery that feels both timeless and inherently modern.
               </p>
 
               <ul className="space-y-6">
