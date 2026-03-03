@@ -49,7 +49,7 @@ export default function Home() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 20 }
+      transition: { type: "spring", stiffness: 260, damping: 25 }
     }
   };
 
@@ -121,7 +121,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.5 }}
             className="font-serif text-5xl md:text-7xl mb-6 tracking-wide"
           >
             Selected <span className="italic text-muted">Stories</span>
@@ -130,7 +130,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             className="text-muted max-w-xl text-lg leading-relaxed"
           >
             A curated collection of editorial weddings, intimate elopements, and architectural portraiture designed with a fashion-forward lens.
@@ -152,7 +152,7 @@ export default function Home() {
                     src={couple.coverImage}
                     alt={couple.name}
                     fill
-                    className="object-cover transition-transform duration-1000 group-hover:scale-105 group-hover:blur-[2px]"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105 group-hover:blur-[2px]"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
                 </div>
@@ -169,8 +169,8 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* 3. ABOUT & PROCESS (Makhno Studio Style Dark Mode) */}
-      <section id="process" className="relative dark-section py-40 px-6 md:px-12 overflow-hidden">
+      {/* 3. ABOUT & PROCESS (Dark Mode) */}
+      <section id="process" className="relative bg-[#0A0A0A] text-white py-40 px-6 md:px-12 overflow-hidden">
         <div className="absolute inset-0 opacity-20 pointer-events-none"
           style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, #333 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
@@ -195,7 +195,7 @@ export default function Home() {
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6 }}
             >
               <h2 className="font-serif text-5xl md:text-8xl leading-none mb-8 tracking-tighter">
                 The <br /> <span className="italic font-light text-[#A3A3A3]">Process.</span>

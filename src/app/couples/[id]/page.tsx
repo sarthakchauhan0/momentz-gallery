@@ -19,7 +19,7 @@ export default async function CouplePage({ params }: { params: Promise<{ id: str
     }
 
     return (
-        <div className="bg-background pt-24 min-h-screen">
+        <div className="bg-background min-h-screen">
 
             {/* Dynamic Hero Section */}
             <section className="relative w-full h-[70vh] md:h-screen">
@@ -65,7 +65,7 @@ export default async function CouplePage({ params }: { params: Promise<{ id: str
                                 src={imgUrl}
                                 alt={`Gallery image ${idx + 1}`}
                                 fill
-                                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                                className="object-cover transition-transform duration-700 group-hover:scale-105"
                             />
                         </div>
                     ))}

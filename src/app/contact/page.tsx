@@ -10,7 +10,7 @@ export default function Contact() {
             <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.6 }}
                 className="w-full md:w-5/12 space-y-12"
             >
                 <h1 className="font-serif text-6xl md:text-8xl tracking-tighter uppercase leading-none">
@@ -38,7 +38,7 @@ export default function Contact() {
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
                 className="w-full md:w-7/12"
             >
                 <form className="space-y-12 font-sans" onSubmit={(e) => e.preventDefault()}>

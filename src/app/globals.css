@@ -8,7 +8,7 @@
   --color-dark-bg: #0A0A0A;
   --color-dark-text: #F5F5F5;
   --color-dark-muted: #A3A3A3;
-  
+
   --font-sans: var(--font-inter);
   --font-serif: var(--font-playfair);
 }
@@ -19,7 +19,7 @@
     --foreground: var(--color-foreground);
   }
 
-  /* Makhno Studio style dark mode classes */
+  /* Dark mode classes for specific sections */
   .dark-section {
     --background: var(--color-dark-bg);
     --foreground: var(--color-dark-text);
@@ -38,12 +38,12 @@
   .text-balance {
     text-wrap: balance;
   }
-  
+
   /* Smooth scrolling global behavior */
   html {
     scroll-behavior: smooth;
   }
-  
+
   /* Aspect ratios for gallery */
   .aspect-4-5 {
     aspect-ratio: 4 / 5;

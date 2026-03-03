@@ -45,7 +45,7 @@ export default function CouplesHub() {
     const activeCouple = couples[currentIndex];
 
     // Handle drag gestures
-    const handleDragEnd = (e: any, { offset, velocity }: any) => {
+    const handleDragEnd = (e: unknown, { offset, velocity }: { offset: { x: number, y: number }, velocity: { x: number, y: number } }) => {
         const swipe = Math.abs(offset.x) * velocity.x;
         if (swipe < -10000) {
             nextSlide();
@@ -95,7 +95,7 @@ export default function CouplesHub() {
                             key={`text-${currentIndex}`}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
                         >
                             <span className="font-sans text-xs md:text-sm uppercase tracking-[0.3em] text-white/70 block mb-4">
                                 {activeCouple.category} • {activeCouple.date}
