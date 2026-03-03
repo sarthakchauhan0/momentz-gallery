@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -20,7 +20,7 @@ export default function CoupleClient({ params, images }: CoupleClientProps) {
     const categoryName = params.category.charAt(0).toUpperCase() + params.category.slice(1);
 
     // Stagger definitions
-    const containerVariants = {
+    const containerVariants: any = {
         hidden: { opacity: 0 },
         show: {
             opacity: 1,
@@ -30,7 +30,7 @@ export default function CoupleClient({ params, images }: CoupleClientProps) {
         }
     };
 
-    const itemVariants = {
+    const itemVariants: any = {
         hidden: { opacity: 0, y: 40 },
         show: {
             opacity: 1,
