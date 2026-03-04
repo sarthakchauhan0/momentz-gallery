@@ -27,6 +27,7 @@ export function Footer() {
                         <span className="text-[#A3A3A3] mb-2 text-xs">Socials</span>
                         <a href="https://www.instagram.com/momentz_gallery/" target="_blank" rel="noopener noreferrer" className="hover:text-[#A3A3A3] transition-colors">Instagram</a>
                         <a href="https://www.facebook.com/momentzgallery/" target="_blank" rel="noopener noreferrer" className="hover:text-[#A3A3A3] transition-colors">Facebook</a>
+                        <a href="https://wa.me/+919958781661" target="_blank" rel="noopener noreferrer" className="hover:text-[#A3A3A3] transition-colors">WhatsApp</a>
                     </div>
                 </div>
 

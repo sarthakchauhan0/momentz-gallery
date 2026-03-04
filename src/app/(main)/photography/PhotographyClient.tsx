@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect, useLayoutEffect } from "react";
-import { motion, useScroll, useTransform, AnimatePresence, useAnimationFrame, useSpring, useMotionValue, wrap } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform, useAnimationFrame, useSpring, useMotionValue, wrap } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { X } from "lucide-react";
-import { GalleryCategory, GalleryCouple } from "@/lib/galleryUtils";
+import { GalleryCategory } from "@/lib/galleryUtils";
 
 interface PhotographyClientProps {
     carouselImages: string[];
@@ -60,82 +59,8 @@ export default function PhotographyClient({ carouselImages, signatureImages, gal
     const sig1 = signatureImages.length > 0 ? signatureImages[0] : "https://images.unsplash.com/photo-1541250848049-b4f7141dca3f?q=80&w=1200&auto=format&fit=crop";
     const sig2 = signatureImages.length > 1 ? signatureImages[1] : "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1200&auto=format&fit=crop";
 
-    // --- Galleries Section ---
-    const [selectedGallery, setSelectedGallery] = useState<GalleryCategory | null>(null);
-    const [isNavigatingBack, setIsNavigatingBack] = useState(false);
-
-    // Disable body scroll when gallery open
-    useEffect(() => {
-        if (selectedGallery) {
-            document.body.style.overflow = "hidden";
-            // Update hash to allow physical back button or link sharing? Actually just keep it simple.
-        } else {
-            document.body.style.overflow = "auto";
-        }
-        return () => { document.body.style.overflow = "auto"; };
-    }, [selectedGallery]);
-
-    const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
-
-    // Handle returning from deep-dive couples (e.g. href="/photography#gallery-editorial")
-    useIsomorphicLayoutEffect(() => {
-        const hash = window.location.hash;
-        if (hash.startsWith("#gallery-")) {
-            // Trigger splash screen instantly before initial paint
-            setIsNavigatingBack(true);
-
-            const requestedId = hash.replace("#gallery-", "");
-            const target = galleriesData.find(g => g.id === requestedId);
-            if (target) {
-                setSelectedGallery(target);
-
-                // Instantly scroll the background page to the galleries section synchronously before paint
-                const section = document.getElementById("galleries-section");
-                if (section) {
-                    section.scrollIntoView({ behavior: "instant" });
-                } else {
-                    // Fallback to next tick if DOM node isn't painted yet
-                    setTimeout(() => {
-                        document.getElementById("galleries-section")?.scrollIntoView({ behavior: "instant" });
-                    }, 0);
-                }
-
-                // Clean up the URL so a manual page refresh doesn't pop the modal again unless intended
-                window.history.replaceState(null, '', window.location.pathname);
-
-                // Remove splash screen after the transition settles
-                setTimeout(() => {
-                    setIsNavigatingBack(false);
-                }, 800);
-            }
-        }
-    }, [galleriesData]);
-
     return (
         <main className="bg-black text-white min-h-screen">
-            {/* --- Splash Screen Mask for Navigation (z-[200]) --- */}
-            <AnimatePresence>
-                {isNavigatingBack && (
-                    <motion.div
-                        className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-3xl flex flex-col items-center justify-center pointer-events-auto"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
-                    >
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0, y: 10 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, ease: "easeOut" }}
-                            className="flex flex-col items-center justify-center text-white"
-                        >
-                            <span className="font-serif text-4xl md:text-6xl tracking-widest uppercase drop-shadow-2xl">Momentz</span>
-                            <span className="font-sans text-sm md:text-base tracking-[0.4em] uppercase text-white/70 mt-3 drop-shadow-lg">Gallery</span>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
             {/* --- SECTION 1: Hero Motion Carousel --- */}
             <section className="relative h-screen w-full flex items-center overflow-hidden bg-[#fafafa]">
                 <motion.div
@@ -242,11 +167,10 @@ export default function PhotographyClient({ carouselImages, signatureImages, gal
                             const cover = gallery.couples.length > 0 ? gallery.couples[0].coverImage : "https://images.unsplash.com/photo-1507504031003-b417242a53b4?q=80&w=800&auto=format&fit=crop";
 
                             return (
-                                <motion.div
+                                <Link
+                                    href={`/photography/${gallery.id.toLowerCase()}`}
                                     key={gallery.id}
-                                    layoutId={`gallery-container-${gallery.id}`}
-                                    onClick={() => setSelectedGallery(gallery)}
-                                    className="group cursor-pointer aspect-[3/4] relative overflow-hidden bg-white"
+                                    className="block group cursor-pointer aspect-[3/4] relative overflow-hidden bg-white"
                                 >
                                     <motion.div layoutId={`gallery-image-${gallery.id}`} className="absolute inset-0">
                                         <Image
@@ -267,124 +191,11 @@ export default function PhotographyClient({ carouselImages, signatureImages, gal
                                             {gallery.title}
                                         </motion.h3>
                                     </motion.div>
-                                </motion.div>
+                                </Link>
                             );
                         })}
                     </div>
                 </div>
-
-                {/* Expanded Gallery View */}
-                <AnimatePresence>
-                    {selectedGallery && (
-                        <motion.div
-                            className="fixed inset-0 z-[100] bg-white overflow-y-auto"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                        >
-                            {/* Fixed Modal Overlays */}
-                            <div className="fixed top-8 left-0 right-0 z-[110] mix-blend-difference pointer-events-auto flex justify-center items-center gap-6 px-6">
-                                {/* Subtle Left Line */}
-                                <div className="hidden md:block h-[1px] w-16 md:w-32 bg-white/30"></div>
-
-                                <Link href="/" className="flex flex-col items-center justify-center text-white group">
-                                    <span className="font-serif text-3xl md:text-4xl tracking-widest uppercase drop-shadow-lg transition-transform duration-500 group-hover:scale-105">Momentz</span>
-                                    <span className="font-sans text-[0.65rem] tracking-[0.3em] uppercase transition-colors text-white/80 mt-1">Gallery</span>
-                                </Link>
-
-                                {/* Subtle Right Line */}
-                                <div className="hidden md:block h-[1px] w-16 md:w-32 bg-white/30"></div>
-                            </div>
-
-                            <div className="fixed bottom-8 right-6 md:right-12 z-[110] pointer-events-auto hidden md:flex">
-                                <Link
-                                    href="/contact"
-                                    className="text-[10px] md:text-xs font-bold tracking-[0.15em] uppercase transition-all duration-500 shadow-[0_8px_30px_rgb(0,0,0,0.25)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] hover:scale-105 bg-white text-black hover:bg-black hover:text-white px-5 py-2.5 rounded-full border border-black/10"
-                                >
-                                    Inquire Now
-                                </Link>
-                            </div>
-
-                            <motion.div
-                                layoutId={`gallery-container-${selectedGallery.id}`}
-                                className="min-h-screen w-full flex flex-col bg-white text-black"
-                            >
-                                {/* Header */}
-                                <div className="relative h-[40vh] md:h-[60vh] w-full shrink-0">
-                                    <motion.div layoutId={`gallery-image-${selectedGallery.id}`} className="absolute inset-0">
-                                        <Image
-                                            src={selectedGallery.couples.length > 0 ? selectedGallery.couples[0].coverImage : "https://images.unsplash.com/photo-1507504031003-b417242a53b4?q=80&w=800&auto=format&fit=crop"}
-                                            alt={selectedGallery.title}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </motion.div>
-                                    <motion.div layoutId={`gallery-overlay-${selectedGallery.id}`} className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                                        <motion.h3
-                                            layoutId={`gallery-title-${selectedGallery.id}`}
-                                            className="text-white font-serif text-5xl md:text-7xl tracking-widest uppercase mt-12"
-                                        >
-                                            {selectedGallery.title}
-                                        </motion.h3>
-                                    </motion.div>
-
-                                    {/* Close Button */}
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); setSelectedGallery(null); }}
-                                        className="absolute top-8 right-8 z-[110] text-white p-2 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-sm transition-colors"
-                                    >
-                                        <X size={32} strokeWidth={1} />
-                                    </button>
-                                </div>
-
-                                {/* Dynamic Couples Grid */}
-                                <div className="max-w-[1600px] mx-auto w-full p-6 md:p-12 pb-32">
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 50 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.4, duration: 0.8 }}
-                                    >
-                                        <p className="font-sans uppercase tracking-[0.2em] text-sm text-center text-gray-500 mb-16">
-                                            Curated Signatures
-                                        </p>
-
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[400px]">
-                                            {selectedGallery.couples.map((couple, idx) => (
-                                                <Link
-                                                    href={`/photography/${couple.category}/${couple.id}`}
-                                                    key={couple.id}
-                                                    className={`group relative overflow-hidden block ${idx === 0 ? "md:col-span-2 md:row-span-2" : ""} ${idx === 3 ? "lg:col-span-2" : ""}`}
-                                                >
-                                                    <Image
-                                                        src={couple.coverImage}
-                                                        alt={`${couple.name} cover`}
-                                                        fill
-                                                        className="object-cover group-hover:scale-105 transition-transform duration-1000"
-                                                    />
-                                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-500 flex flex-col items-center justify-center p-6 text-center">
-                                                        <div
-                                                            className="opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 text-white flex flex-col items-center justify-center z-20"
-                                                        >
-                                                            <motion.h4
-                                                                layoutId={`couple-title-${couple.id}`}
-                                                                className="font-serif text-5xl md:text-6xl tracking-wide mb-3 text-white drop-shadow-2xl font-medium"
-                                                            >
-                                                                {couple.name}
-                                                            </motion.h4>
-                                                            <span className="font-sans text-base md:text-lg uppercase tracking-[0.2em] text-white/90 drop-shadow-xl font-bold">
-                                                                View Full Gallery
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    </motion.div>
-                                </div>
-                            </motion.div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
             </section>
 
             {/* --- SECTION 4: Contact CTA Footer --- */}
