@@ -6,7 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { GalleryCategory, GalleryCouple } from "@/lib/galleryUtils";
-import { usePathname } from "next/navigation";
 
 interface PhotographyClientProps {
     carouselImages: string[];
@@ -15,13 +14,6 @@ interface PhotographyClientProps {
 }
 
 export default function PhotographyClient({ carouselImages, signatureImages, galleriesData }: PhotographyClientProps) {
-    const [isMounted, setIsMounted] = useState(false);
-    const pathname = usePathname();
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
-
     // --- Hero Carousel Logic ---
     const baseVelocity = -1;
     const baseX = useMotionValue(0);
@@ -81,15 +73,8 @@ export default function PhotographyClient({ carouselImages, signatureImages, gal
         return () => { document.body.style.overflow = "auto"; };
     }, [selectedGallery]);
 
-    if (!isMounted) return <div className="min-h-screen bg-black" />;
-
     return (
-        <motion.main
-            key={pathname}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-black text-white min-h-screen"
-        >
+        <main className="bg-black text-white min-h-screen">
             {/* --- SECTION 1: Hero Motion Carousel --- */}
             <section className="relative h-screen w-full flex items-center overflow-hidden bg-[#fafafa]">
                 <motion.div
@@ -335,6 +320,6 @@ export default function PhotographyClient({ carouselImages, signatureImages, gal
                     </Link>
                 </motion.div>
             </section>
-        </motion.main>
+        </main>
     );
 }

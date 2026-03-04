@@ -14,20 +14,17 @@ export function AnimationWrapper({ children }: { children: React.ReactNode }) {
     }, []);
 
     return (
-        <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
-            <motion.div
-                key={pathname}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{
-                    duration: 0.4,
-                    ease: [0.22, 1, 0.36, 1], // Custom spring-like easing
-                }}
-                className="w-full flex-grow flex flex-col"
-            >
-                {children}
-            </motion.div>
-        </AnimatePresence>
+        <motion.div
+            key={pathname}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+                duration: 0.4,
+                ease: [0.22, 1, 0.36, 1], // Custom spring-like easing
+            }}
+            className="w-full flex-grow flex flex-col"
+        >
+            {children}
+        </motion.div>
     );
 }

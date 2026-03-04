@@ -4,8 +4,6 @@ import { motion, Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
 
 interface CoupleClientProps {
     params: { category: string; couple: string };
@@ -13,13 +11,6 @@ interface CoupleClientProps {
 }
 
 export default function CoupleClient({ params, images }: CoupleClientProps) {
-    const [isMounted, setIsMounted] = useState(false);
-    const pathname = usePathname();
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, [params.category, params.couple]);
-
     // Reconstruct the couple name for the title
     const coupleName = params.couple
         .split('-')
@@ -28,10 +19,8 @@ export default function CoupleClient({ params, images }: CoupleClientProps) {
 
     const categoryName = params.category.charAt(0).toUpperCase() + params.category.slice(1);
 
-    if (!isMounted) return <div className="min-h-screen bg-[#fafafa]" />;
-
     // Stagger definitions
-    const containerVariants: Variants = {
+    const containerVariants: any = {
         hidden: { opacity: 0 },
         show: {
             opacity: 1,
@@ -41,7 +30,7 @@ export default function CoupleClient({ params, images }: CoupleClientProps) {
         }
     };
 
-    const itemVariants: Variants = {
+    const itemVariants: any = {
         hidden: { opacity: 0, y: 40 },
         show: {
             opacity: 1,
@@ -55,12 +44,7 @@ export default function CoupleClient({ params, images }: CoupleClientProps) {
     };
 
     return (
-        <motion.main
-            key={pathname}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="min-h-screen bg-[#fafafa] text-black pb-32"
-        >
+        <main className="min-h-screen bg-[#fafafa] text-black pb-32">
             {/* Minimalist Navigation */}
             <nav className="fixed top-0 left-0 w-full p-6 md:p-12 z-50 mix-blend-difference text-white">
                 <Link
@@ -136,6 +120,6 @@ export default function CoupleClient({ params, images }: CoupleClientProps) {
                     ))}
                 </motion.div>
             </section>
-        </motion.main>
+        </main>
     );
 }
