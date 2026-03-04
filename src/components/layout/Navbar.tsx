@@ -33,7 +33,6 @@ export function Navbar() {
     const navLinks = [
         { name: "Photography", href: "/photography" },
         { name: "Stories", href: "/couples" },
-        { name: "Process", href: "/#process" },
         { name: "About", href: "/about" },
         { name: "Contact", href: "/contact" },
     ];
@@ -57,8 +56,8 @@ export function Navbar() {
                 </Link>
 
                 {/* Desktop Nav */}
-                <nav className="hidden md:flex gap-10">
-                    {navLinks.map((link) => {
+                <nav className="hidden md:flex gap-10 items-center">
+                    {navLinks.filter(l => l.name !== "Contact").map((link) => {
                         const isActive = link.href.startsWith('/#') ? false : (link.href === '/' ? pathname === '/' : pathname.startsWith(link.href));
                         return (
                             <Link
@@ -70,6 +69,8 @@ export function Navbar() {
                             </Link>
                         );
                     })}
+                    {/* Placeholder to reserve exact space for the absolute-positioned PersistentOverlay "Inquire Now" button */}
+                    <div className="text-xs tracking-widest uppercase px-6 py-3 opacity-0 pointer-events-none select-none">Inquire Now</div>
                 </nav>
 
                 {/* Mobile Toggle */}

@@ -48,7 +48,7 @@ export default function CoupleClient({ params, images }: CoupleClientProps) {
             {/* Minimalist Navigation */}
             <nav className="fixed top-0 left-0 w-full p-6 md:p-12 z-50 mix-blend-difference text-white">
                 <Link
-                    href="/photography"
+                    href={`/photography#gallery-${params.category.toLowerCase()}`}
                     className="inline-flex items-center gap-2 hover:opacity-70 transition-opacity font-sans uppercase tracking-[0.2em] text-sm"
                 >
                     <ArrowLeft size={16} />

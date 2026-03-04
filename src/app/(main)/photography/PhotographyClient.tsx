@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { motion, useScroll, useTransform, AnimatePresence, useAnimationFrame, useSpring, useMotionValue, wrap } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -62,19 +62,80 @@ export default function PhotographyClient({ carouselImages, signatureImages, gal
 
     // --- Galleries Section ---
     const [selectedGallery, setSelectedGallery] = useState<GalleryCategory | null>(null);
+    const [isNavigatingBack, setIsNavigatingBack] = useState(false);
 
     // Disable body scroll when gallery open
     useEffect(() => {
         if (selectedGallery) {
             document.body.style.overflow = "hidden";
+            // Update hash to allow physical back button or link sharing? Actually just keep it simple.
         } else {
             document.body.style.overflow = "auto";
         }
         return () => { document.body.style.overflow = "auto"; };
     }, [selectedGallery]);
 
+    const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
+    // Handle returning from deep-dive couples (e.g. href="/photography#gallery-editorial")
+    useIsomorphicLayoutEffect(() => {
+        const hash = window.location.hash;
+        if (hash.startsWith("#gallery-")) {
+            // Trigger splash screen instantly before initial paint
+            setIsNavigatingBack(true);
+
+            const requestedId = hash.replace("#gallery-", "");
+            const target = galleriesData.find(g => g.id === requestedId);
+            if (target) {
+                setSelectedGallery(target);
+
+                // Instantly scroll the background page to the galleries section synchronously before paint
+                const section = document.getElementById("galleries-section");
+                if (section) {
+                    section.scrollIntoView({ behavior: "instant" });
+                } else {
+                    // Fallback to next tick if DOM node isn't painted yet
+                    setTimeout(() => {
+                        document.getElementById("galleries-section")?.scrollIntoView({ behavior: "instant" });
+                    }, 0);
+                }
+
+                // Clean up the URL so a manual page refresh doesn't pop the modal again unless intended
+                window.history.replaceState(null, '', window.location.pathname);
+
+                // Remove splash screen after the transition settles
+                setTimeout(() => {
+                    setIsNavigatingBack(false);
+                }, 800);
+            }
+        }
+    }, [galleriesData]);
+
     return (
         <main className="bg-black text-white min-h-screen">
+            {/* --- Splash Screen Mask for Navigation (z-[200]) --- */}
+            <AnimatePresence>
+                {isNavigatingBack && (
+                    <motion.div
+                        className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-3xl flex flex-col items-center justify-center pointer-events-auto"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0, y: 10 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, ease: "easeOut" }}
+                            className="flex flex-col items-center justify-center text-white"
+                        >
+                            <span className="font-serif text-4xl md:text-6xl tracking-widest uppercase drop-shadow-2xl">Momentz</span>
+                            <span className="font-sans text-sm md:text-base tracking-[0.4em] uppercase text-white/70 mt-3 drop-shadow-lg">Gallery</span>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* --- SECTION 1: Hero Motion Carousel --- */}
             <section className="relative h-screen w-full flex items-center overflow-hidden bg-[#fafafa]">
                 <motion.div
@@ -168,7 +229,7 @@ export default function PhotographyClient({ carouselImages, signatureImages, gal
             </section>
 
             {/* --- SECTION 3: The Galleries --- */}
-            <section className="py-32 bg-[#0A0A0A] text-white px-6 md:px-12 relative overflow-hidden">
+            <section id="galleries-section" className="py-32 bg-[#0A0A0A] text-white px-6 md:px-12 relative overflow-hidden">
                 <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, #333 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
                 <div className="max-w-[1600px] mx-auto relative z-10">
                     <h2 className="font-serif text-3xl md:text-5xl mb-16 italic font-light tracking-wide text-center">
@@ -221,6 +282,29 @@ export default function PhotographyClient({ carouselImages, signatureImages, gal
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                         >
+                            {/* Fixed Modal Overlays */}
+                            <div className="fixed top-8 left-0 right-0 z-[110] mix-blend-difference pointer-events-auto flex justify-center items-center gap-6 px-6">
+                                {/* Subtle Left Line */}
+                                <div className="hidden md:block h-[1px] w-16 md:w-32 bg-white/30"></div>
+
+                                <Link href="/" className="flex flex-col items-center justify-center text-white group">
+                                    <span className="font-serif text-3xl md:text-4xl tracking-widest uppercase drop-shadow-lg transition-transform duration-500 group-hover:scale-105">Momentz</span>
+                                    <span className="font-sans text-[0.65rem] tracking-[0.3em] uppercase transition-colors text-white/80 mt-1">Gallery</span>
+                                </Link>
+
+                                {/* Subtle Right Line */}
+                                <div className="hidden md:block h-[1px] w-16 md:w-32 bg-white/30"></div>
+                            </div>
+
+                            <div className="fixed bottom-8 right-6 md:right-12 z-[110] pointer-events-auto hidden md:flex">
+                                <Link
+                                    href="/contact"
+                                    className="text-[10px] md:text-xs font-bold tracking-[0.15em] uppercase transition-all duration-500 shadow-[0_8px_30px_rgb(0,0,0,0.25)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] hover:scale-105 bg-white text-black hover:bg-black hover:text-white px-5 py-2.5 rounded-full border border-black/10"
+                                >
+                                    Inquire Now
+                                </Link>
+                            </div>
+
                             <motion.div
                                 layoutId={`gallery-container-${selectedGallery.id}`}
                                 className="min-h-screen w-full flex flex-col bg-white text-black"
