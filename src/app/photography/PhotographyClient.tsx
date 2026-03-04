@@ -105,6 +105,7 @@ export default function PhotographyClient({ carouselImages, signatureImages, gal
                                 alt={`Curated Photography ${idx}`}
                                 fill
                                 className="object-cover pointer-events-none"
+                                priority={idx < 4}
                             />
                         </motion.div>
                     ))}
