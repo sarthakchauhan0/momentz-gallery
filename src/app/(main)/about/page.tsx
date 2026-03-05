@@ -38,7 +38,7 @@ const HeroSection = () => {
                     className="relative w-full aspect-[3/4] max-w-md mx-auto lg:mx-0 overflow-hidden group rounded-[40px] rounded-tr-none rounded-bl-none"
                 >
                     <Image
-                        src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1200&auto=format&fit=crop"
+                        src="/assets/team/founder/tarun.jpeg"
                         alt="Tarun Bajaj - Founder"
                         fill
                         className="object-cover grayscale opacity-90 transition-all duration-700 ease-in-out group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"

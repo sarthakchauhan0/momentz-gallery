@@ -211,7 +211,7 @@ export default function Home() {
           >
             <div className="relative aspect-[3/4] w-full max-w-md mx-auto overflow-hidden">
               <Image
-                src="/assets/team/tarun.jpg"
+                src="/assets/team/founder/tarun.jpeg"
                 alt="Studio Process"
                 fill
                 className="object-cover grayscale contrast-125"
