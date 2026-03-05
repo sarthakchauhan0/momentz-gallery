@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-
+const currentYear = new Date().getFullYear();
+const nextYear = currentYear + 1;
 export default function Contact() {
     return (
         <div className="bg-background min-h-screen pt-40 pb-20 px-6 md:px-12 flex flex-col md:flex-row max-w-[1600px] mx-auto gap-20">
@@ -19,7 +20,7 @@ export default function Contact() {
                 </h1>
                 <p className="text-lg max-w-sm text-muted leading-relaxed">
                     We accept a limited number of commissions each year to ensure the highest level of dedication to our couples.
-                    Currently booking for 2025 and 2026.
+                    Currently booking for {currentYear} and {nextYear}.
                 </p>
 
                 <div className="space-y-6 text-sm uppercase tracking-widest pt-10 border-t border-gray-200">

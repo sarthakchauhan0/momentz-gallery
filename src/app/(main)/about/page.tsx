@@ -357,7 +357,6 @@ export default function AboutPage() {
             <ServicesSection />
             <VisionSection />
             <TimelineSection />
-            <TeamSection />
             <CTASection />
         </div>
     );
