@@ -6,17 +6,37 @@ import Link from "next/link";
 import Image from "next/image";
 import { couples } from "@/lib/data";
 import { ChevronRight, ChevronLeft } from "lucide-react";
+import { getHomepageImages } from "@/actions/assets";
 
-// Slide data for Hero
-const slides = [
-  { id: 1, image: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1920&auto=format&fit=crop", title: "Quiet", subtitle: "Luxury" },
-  { id: 2, image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1920&auto=format&fit=crop", title: "Cinematic", subtitle: "Moments" },
-  { id: 3, image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1920&auto=format&fit=crop", title: "Editorial", subtitle: "Elegance" },
+// Text data for Hero
+const heroTexts = [
+  { title: "Quiet", subtitle: "Luxury" },
+  { title: "Cinematic", subtitle: "Moments" },
+  { title: "Editorial", subtitle: "Elegance" },
 ];
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [dynamicSlides, setDynamicSlides] = useState<{ id: number, image: string, title?: string, subtitle?: string }[]>([]);
   const { scrollYProgress } = useScroll();
+
+  useEffect(() => {
+    getHomepageImages().then((images) => {
+      if (images && images.length > 0) {
+        setDynamicSlides(
+          images.map((img, index) => {
+            const defaultText = heroTexts[index % heroTexts.length];
+            return {
+              id: index + 1,
+              image: img,
+              title: defaultText.title,
+              subtitle: defaultText.subtitle,
+            };
+          })
+        );
+      }
+    });
+  }, []);
 
   // Parallax effects
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
@@ -24,14 +44,23 @@ export default function Home() {
 
   // Auto-advance slider
   useEffect(() => {
+    if (dynamicSlides.length === 0) return;
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
+      setCurrentSlide((prev) => (prev + 1) % dynamicSlides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [dynamicSlides.length]);
 
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  const nextSlide = () => {
+    if (dynamicSlides.length > 0) {
+      setCurrentSlide((prev) => (prev + 1) % dynamicSlides.length);
+    }
+  };
+  const prevSlide = () => {
+    if (dynamicSlides.length > 0) {
+      setCurrentSlide((prev) => (prev - 1 + dynamicSlides.length) % dynamicSlides.length);
+    }
+  };
 
   // Stagger grid variants
   const containerVariants: Variants = {
@@ -69,7 +98,7 @@ export default function Home() {
             >
               <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${slides[currentSlide].image})` }}
+                style={{ backgroundImage: `url(${dynamicSlides.length > 0 && dynamicSlides[currentSlide] ? dynamicSlides[currentSlide].image : ""})` }}
               />
               <div className="absolute inset-0 bg-black/30" />
             </motion.div>
@@ -84,8 +113,8 @@ export default function Home() {
             transition={{ delay: 0.5, duration: 1 }}
           >
             <h1 className="font-serif text-6xl md:text-8xl lg:text-9xl uppercase tracking-tighter mb-4">
-              <span className="block italic font-light">{slides[currentSlide].title}</span>
-              <span className="block font-bold">{slides[currentSlide].subtitle}</span>
+              <span className="block italic font-light">{dynamicSlides.length > 0 && dynamicSlides[currentSlide] ? dynamicSlides[currentSlide].title : "..."}</span>
+              <span className="block font-bold">{dynamicSlides.length > 0 && dynamicSlides[currentSlide] ? dynamicSlides[currentSlide].subtitle : ""}</span>
             </h1>
             <p className="font-sans text-sm md:text-base uppercase tracking-[0.3em] mt-8 text-white/80">
               Capturing Timeless Stories
@@ -100,7 +129,7 @@ export default function Home() {
           </button>
 
           <div className="flex gap-4 items-center">
-            {slides.map((_, i) => (
+            {dynamicSlides.map((_, i) => (
               <div
                 key={i}
                 className={`h-px transition-all duration-500 ${i === currentSlide ? "w-12 bg-white" : "w-4 bg-white/40"}`}
@@ -182,7 +211,7 @@ export default function Home() {
           >
             <div className="relative aspect-[3/4] w-full max-w-md mx-auto overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop"
+                src="/assets/team/tarun.jpg"
                 alt="Studio Process"
                 fill
                 className="object-cover grayscale contrast-125"

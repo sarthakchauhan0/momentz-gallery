@@ -1,8 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion, Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { getTeamImages } from "@/actions/assets";
 
 // --- Components ---
 
@@ -211,12 +213,25 @@ const TimelineSection = () => {
 };
 
 const TeamSection = () => {
-    const team = [
+    const defaultTeam = [
         { name: "Marcus Chen", role: "Lead Photographer", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop" },
         { name: "Sarah Kline", role: "Creative Director", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" },
         { name: "David Rossi", role: "Senior Editor", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop" },
         { name: "Amara Ndiaye", role: "Stylist", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=800&auto=format&fit=crop" }
     ];
+
+    const [team, setTeam] = useState(defaultTeam);
+
+    useEffect(() => {
+        getTeamImages().then((images) => {
+            if (images && images.length > 0) {
+                setTeam(prev => prev.map((member, index) => ({
+                    ...member,
+                    img: images[index] || images[images.length - 1]
+                })));
+            }
+        });
+    }, []);
 
     return (
         <section className="py-32 px-6 md:px-12 bg-background">
