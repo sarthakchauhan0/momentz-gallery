@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
 interface GalleryGridProps {
     gallery: string[];
@@ -11,6 +13,7 @@ interface GalleryGridProps {
 export function GalleryGrid({ gallery, coupleName }: GalleryGridProps) {
     const [randomImages, setRandomImages] = useState<string[]>([]);
     const [isMounted, setIsMounted] = useState(false);
+    const [index, setIndex] = useState(-1);
 
     useEffect(() => {
         setIsMounted(true);
@@ -50,21 +53,34 @@ export function GalleryGrid({ gallery, coupleName }: GalleryGridProps) {
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
-            {randomImages.map((imgUrl, idx) => (
-                <div
-                    key={idx}
-                    className={`relative overflow-hidden group ${idx % 2 === 1 ? 'md:mt-32 aspect-square md:aspect-[4/5]' : 'aspect-[16/9] md:aspect-[3/4]'
-                        }`}
-                >
-                    <Image
-                        src={imgUrl}
-                        alt={`${coupleName} Gallery image ${idx + 1}`}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                </div>
-            ))}
-        </div>
+        <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
+                {randomImages.map((imgUrl, idx) => (
+                    <button
+                        key={idx}
+                        onClick={() => setIndex(idx)}
+                        className={`relative overflow-hidden group text-left outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 ${idx % 2 === 1 ? 'md:mt-32 aspect-square md:aspect-[4/5]' : 'aspect-[16/9] md:aspect-[3/4]'
+                            }`}
+                    >
+                        <Image
+                            src={imgUrl}
+                            alt={`${coupleName} Gallery image ${idx + 1}`}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                    </button>
+                ))}
+            </div>
+
+            <Lightbox
+                index={index}
+                open={index >= 0}
+                close={() => setIndex(-1)}
+                slides={randomImages.map((src) => ({ src }))}
+                styles={{
+                    container: { backgroundColor: "rgba(0, 0, 0, 0.9)" },
+                }}
+            />
+        </>
     );
 }

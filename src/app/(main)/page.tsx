@@ -214,7 +214,7 @@ export default function Home() {
                 src="/assets/team/founder/tarun.jpeg"
                 alt="Studio Process"
                 fill
-                className="object-cover grayscale contrast-125"
+                className="object-cover"
               />
             </div>
           </motion.div>

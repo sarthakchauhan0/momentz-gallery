@@ -129,7 +129,7 @@ export default function PhotographyClient({ carouselImages, signatureImages, gal
                         transition={{ delay: 0.2, duration: 0.8 }}
                         className="font-sans text-gray-500 max-w-2xl mx-auto mt-8 text-sm md:text-base leading-relaxed"
                     >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate.
+                        Capturing the quiet glances, the unbridled laughter, and the split-second emotions that define your story. Our signature work isn’t just about photography; it’s about preserving the soul of the moment in its most authentic form. We don't just take pictures—we archive memoriesdipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate.
                     </motion.p>
                 </div>
 
@@ -211,7 +211,7 @@ export default function PhotographyClient({ carouselImages, signatureImages, gal
                     </h2>
 
                     <Link href="/contact" className="group relative inline-flex items-center justify-center overflow-hidden border border-white px-12 py-5 text-sm uppercase tracking-[0.2em] transition-all bg-black hover:bg-white text-white hover:text-black">
-                        <span className="relative z-10 transition-colors duration-500">Enquire Now</span>
+                        <span className="relative z-10 transition-colors duration-500">Inquire Now</span>
                     </Link>
                 </motion.div>
             </section>

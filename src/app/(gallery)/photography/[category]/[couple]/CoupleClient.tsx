@@ -1,9 +1,12 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
 interface CoupleClientProps {
     params: { category: string; couple: string };
@@ -11,6 +14,8 @@ interface CoupleClientProps {
 }
 
 export default function CoupleClient({ params, images }: CoupleClientProps) {
+    const [index, setIndex] = useState(-1);
+
     // Reconstruct the couple name for the title
     const coupleName = params.couple
         .split('-')
@@ -68,7 +73,7 @@ export default function CoupleClient({ params, images }: CoupleClientProps) {
                         src={images[0]} // Use first image as hero
                         alt={`${coupleName} Hero`}
                         fill
-                        className="object-cover opacity-60"
+                        className="object-cover opacity-60 pointer-events-none"
                         priority
                     />
                 </motion.div>
@@ -83,7 +88,6 @@ export default function CoupleClient({ params, images }: CoupleClientProps) {
                         {categoryName} Gallery
                     </motion.span>
 
-                    {/* layoutId intended to match the thumbnail title from the previous page */}
                     <motion.h1
                         layoutId={`couple-title-${params.couple}`}
                         className="font-serif text-6xl md:text-8xl lg:text-9xl tracking-tight drop-shadow-2xl"
@@ -101,18 +105,18 @@ export default function CoupleClient({ params, images }: CoupleClientProps) {
                     animate="show"
                     className="columns-1 md:columns-2 lg:columns-3 gap-4 md:gap-8 space-y-4 md:space-y-8"
                 >
-                    {/* Skip the first image since it was used in the hero, to avoid immediate repetition */}
-                    {images.slice(1).map((src, idx) => (
+                    {images.map((src, idx) => (
                         <motion.div
-                            key={idx}
+                            key={src}
                             variants={itemVariants}
-                            className="break-inside-avoid relative overflow-hidden group rounded-sm"
+                            className="break-inside-avoid relative overflow-hidden group rounded-sm cursor-pointer"
+                            onClick={() => setIndex(idx)}
                         >
                             <Image
                                 src={src}
-                                alt={`${coupleName} Gallery Image ${idx + 2}`}
-                                width={800} // Masonry needs defined width/height to prevent layout shifts. 
-                                height={1200} // Next.js optimizes aspect ratio visually, these are just internal boundaries
+                                alt={`${coupleName} Gallery Image ${idx + 1}`}
+                                width={800}
+                                height={1200}
                                 className="w-full h-auto object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
@@ -120,6 +124,16 @@ export default function CoupleClient({ params, images }: CoupleClientProps) {
                     ))}
                 </motion.div>
             </section>
+
+            <Lightbox
+                index={index}
+                open={index >= 0}
+                close={() => setIndex(-1)}
+                slides={images.map((src) => ({ src }))}
+                styles={{
+                    container: { backgroundColor: "rgba(0, 0, 0, 0.9)" },
+                }}
+            />
         </main>
     );
 }
