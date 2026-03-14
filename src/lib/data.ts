@@ -4,7 +4,7 @@
 export interface CoupleStory {
     id: string;
     name: string;
-    category: "Luxury Wedding" | "Destination Elopement" | "Pre-Wedding Editorial";
+    category: "Destination" | "Pre-Wedding" | "Traditional";
     date: string;
     location: string;
     coverImage: string; // Used for grid
@@ -14,63 +14,62 @@ export interface CoupleStory {
 
 export const couples: CoupleStory[] = [
     {
-        id: "aanya-rohan",
-        name: "Aanya & Rohan",
-        category: "Luxury Wedding",
+        id: "silvia-and-aitor",
+        name: "Silvia & Aitor",
+        category: "Destination",
         date: "September 2025",
-        location: "Udaipur, India",
-        coverImage: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
-        heroImage: "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=1920&auto=format&fit=crop",
+        location: "Mallorca, Spain",
+        coverImage: "/assets/gallery/Destination/Silvia-and-Aitor/IMG_4544.jpg",
+        heroImage: "/assets/gallery/Destination/Silvia-and-Aitor/IMG_4544.jpg",
         gallery: [
-            "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1494955870715-979ca4f13bf0?q=80&w=800&auto=format&fit=crop",
+            "/assets/gallery/Destination/Silvia-and-Aitor/_AN18142.jpg",
+            "/assets/gallery/Destination/Silvia-and-Aitor/_AN18215.jpg",
+            "/assets/gallery/Destination/Silvia-and-Aitor/_AN18232.jpg",
+            "/assets/gallery/Destination/Silvia-and-Aitor/_AN18242.jpg",
+            "/assets/gallery/Destination/Silvia-and-Aitor/_AN18252.jpg",
+            "/assets/gallery/Destination/Silvia-and-Aitor/_AN18308.jpg",
+            "/assets/gallery/Destination/Silvia-and-Aitor/_AN18311.jpg",
+            "/assets/gallery/Destination/Silvia-and-Aitor/_AN18313.jpg",
+            "/assets/gallery/Destination/Silvia-and-Aitor/_AN18327.jpg",
+            "/assets/gallery/Destination/Silvia-and-Aitor/_AN18376.jpg",
+            "/assets/gallery/Destination/Silvia-and-Aitor/_AN18400.jpg",
+            "/assets/gallery/Destination/Silvia-and-Aitor/_AN18401.jpg",
         ]
     },
     {
-        id: "priya-aryan",
-        name: "Priya & Aryan",
-        category: "Pre-Wedding Editorial",
+        id: "tejaswini-and-vaibhav",
+        name: "Tejaswini & Vaibhav",
+        category: "Pre-Wedding",
         date: "October 2025",
-        location: "Jaipur, India",
-        coverImage: "https://images.unsplash.com/photo-1494955870715-979ca4f13bf0?q=80&w=800&auto=format&fit=crop",
-        heroImage: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1920&auto=format&fit=crop",
+        location: "New Delhi, India",
+        coverImage: "/assets/gallery/Pre-Wedding/Tejaswini-and-Vaibhav/03a.jpg",
+        heroImage: "/assets/gallery/Pre-Wedding/Tejaswini-and-Vaibhav/03a.jpg",
         gallery: [
-            "https://images.unsplash.com/photo-1515516089376-88db1e26e974?q=80&w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1454391304352-2bf4678b1a7a?q=80&w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1481277542470-605612bd2d61?q=80&w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=800&auto=format&fit=crop",
+            "/assets/gallery/Pre-Wedding/Tejaswini-and-Vaibhav/03a.jpg",
+            "/assets/gallery/Pre-Wedding/Tejaswini-and-Vaibhav/04.jpg",
+            "/assets/gallery/Pre-Wedding/Tejaswini-and-Vaibhav/05.jpg",
+            "/assets/gallery/Pre-Wedding/Tejaswini-and-Vaibhav/06.jpg",
+            "/assets/gallery/Pre-Wedding/Tejaswini-and-Vaibhav/07.jpg",
         ]
     },
     {
-        id: "kavya-arjun",
-        name: "Kavya & Arjun",
-        category: "Destination Elopement",
-        date: "August 2025",
-        location: "Goa, India",
-        coverImage: "https://images.unsplash.com/photo-1511556820780-d912e42b4980?q=80&w=800&auto=format&fit=crop",
-        heroImage: "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=1920&auto=format&fit=crop",
-        gallery: [
-            "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1505944357431-27579db47558?q=80&w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
-        ]
-    },
-    {
-        id: "chloe-james",
-        name: "Chloe & James",
-        category: "Luxury Wedding",
+        id: "aishwarya-and-rohan",
+        name: "Aishwarya & Rohan",
+        category: "Traditional",
         date: "December 2025",
-        location: "Santorini, Greece",
-        coverImage: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=800&auto=format&fit=crop",
-        heroImage: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1920&auto=format&fit=crop",
+        location: "Mumbai, India",
+        coverImage: "/assets/gallery/Traditional/Aishwarya-and-Rohan/02.jpg",
+        heroImage: "/assets/gallery/Traditional/Aishwarya-and-Rohan/02.jpg",
         gallery: [
-            "https://images.unsplash.com/photo-1505944357431-27579db47558?q=80&w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1494955870715-979ca4f13bf0?q=80&w=800&auto=format&fit=crop",
+            "/assets/gallery/Traditional/Aishwarya-and-Rohan/02.jpg",
+            "/assets/gallery/Traditional/Aishwarya-and-Rohan/10.jpg",
+            "/assets/gallery/Traditional/Aishwarya-and-Rohan/11.jpg",
+            "/assets/gallery/Traditional/Aishwarya-and-Rohan/13.jpg",
+            "/assets/gallery/Traditional/Aishwarya-and-Rohan/14.jpg",
+            "/assets/gallery/Traditional/Aishwarya-and-Rohan/15.jpg",
+            "/assets/gallery/Traditional/Aishwarya-and-Rohan/27.jpg",
+            "/assets/gallery/Traditional/Aishwarya-and-Rohan/29.jpg",
+            "/assets/gallery/Traditional/Aishwarya-and-Rohan/33.jpg",
         ]
     }
 ];

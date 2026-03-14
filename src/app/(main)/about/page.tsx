@@ -41,7 +41,7 @@ const HeroSection = () => {
                         src="/assets/team/founder/tarun.jpeg"
                         alt="Tarun Bajaj - Founder"
                         fill
-                        className="object-cover grayscale opacity-90 transition-all duration-700 ease-in-out group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
+                        className="object-cover opacity-90 transition-all duration-700 ease-in-out group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
                         priority
                     />
                 </motion.div>

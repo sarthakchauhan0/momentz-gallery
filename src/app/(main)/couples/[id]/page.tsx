@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getCoupleById, couples } from "@/lib/data";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import { GalleryGrid } from "@/components/couples/GalleryGrid";
 
 // Generate static params for build time
 export async function generateStaticParams() {
@@ -54,22 +55,7 @@ export default async function CouplePage({ params }: { params: Promise<{ id: str
 
             {/* Masonry / Staggered Gallery Grid */}
             <section className="max-w-[1600px] mx-auto px-6 md:px-12 pb-40">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
-                    {couple.gallery.map((imgUrl, idx) => (
-                        <div
-                            key={idx}
-                            className={`relative overflow-hidden group ${idx % 2 === 1 ? 'md:mt-32 aspect-square md:aspect-[4/5]' : 'aspect-[16/9] md:aspect-[3/4]'
-                                }`}
-                        >
-                            <Image
-                                src={imgUrl}
-                                alt={`Gallery image ${idx + 1}`}
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                            />
-                        </div>
-                    ))}
-                </div>
+                <GalleryGrid gallery={couple.gallery} coupleName={couple.name} />
             </section>
 
             {/* Footer Navigation (Next Story) */}
