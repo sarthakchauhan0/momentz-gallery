@@ -21,8 +21,8 @@ export async function sendEmail(formData: FormData) {
 
     try {
         const { data, error } = await resend.emails.send({
-            from: 'Momentz Gallery <connnect@momentzgallery.com>', // Update this with your verified domain in production
-            to: ['connnect@momentzgallery.com'], // Replace with your target email
+            from: 'Momentz Gallery <connect@momentzgallery.com>', // Update this with your verified domain in production
+            to: ['connect@momentzgallery.com'], // Replace with your target email
             subject: `New Inquiry from ${name}`,
             replyTo: email,
             html: `
