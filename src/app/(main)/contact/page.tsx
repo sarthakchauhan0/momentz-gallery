@@ -1,9 +1,33 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { sendEmail } from "@/app/actions/sendEmail";
+
 const currentYear = new Date().getFullYear();
 const nextYear = currentYear + 1;
+
 export default function Contact() {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSent, setIsSent] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        setIsSubmitting(true);
+        setError(null);
+
+        const formData = new FormData(event.currentTarget);
+        const result = await sendEmail(formData);
+
+        if (result.success) {
+            setIsSent(true);
+        } else if (result.error) {
+            setError(result.error);
+        }
+        setIsSubmitting(false);
+    }
+
     return (
         <div className="bg-background min-h-screen">
             <div className="pt-40 pb-20 px-6 md:px-12 flex flex-col md:flex-row max-w-[1600px] mx-auto gap-20">
@@ -43,82 +67,109 @@ export default function Contact() {
                     transition={{ duration: 0.6, delay: 0.1 }}
                     className="w-full md:w-7/12"
                 >
-                    <form className="space-y-12 font-sans" onSubmit={(e) => e.preventDefault()}>
+                    {isSent ? (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="bg-neutral-50 p-12 text-center space-y-6"
+                        >
+                            <h3 className="font-serif text-3xl uppercase tracking-tight">Thank You</h3>
+                            <p className="text-muted text-lg">Your inquiry has been sent successfully. We will get back to you shortly.</p>
+                            <button
+                                onClick={() => setIsSent(false)}
+                                className="text-xs uppercase tracking-widest border-b border-black pb-1 hover:opacity-60 transition-opacity"
+                            >
+                                Send another message
+                            </button>
+                        </motion.div>
+                    ) : (
+                        <form className="space-y-12 font-sans" onSubmit={handleSubmit}>
+                            {error && (
+                                <p className="text-red-500 text-sm uppercase tracking-widest">{error}</p>
+                            )}
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
-                                <label htmlFor="name" className="block text-xs uppercase tracking-widest text-muted mb-2">Names</label>
-                                <input type="text" id="name" required className="w-full bg-transparent outline-none text-lg text-black placeholder-gray-300" placeholder="Jane & John" />
-                            </div>
-                            <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
-                                <label htmlFor="date" className="block text-xs uppercase tracking-widest text-muted mb-2">Event Date</label>
-                                <input type="text" id="date" required className="w-full bg-transparent outline-none text-lg text-black placeholder-gray-300" placeholder="e.g. Sept 2025" />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
-                                <label htmlFor="email" className="block text-xs uppercase tracking-widest text-muted mb-2">Email Address</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    required
-                                    pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
-                                    title="Please enter a valid email address."
-                                    className="w-full bg-transparent outline-none text-lg text-black placeholder-gray-300"
-                                    placeholder="hello@example.com"
-                                />
-                            </div>
-                            <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
-                                <label htmlFor="phone" className="block text-xs uppercase tracking-widest text-muted mb-2">Phone Number</label>
-                                <div className="flex items-center">
-                                    <select
-                                        className="bg-transparent outline-none text-lg text-black cursor-pointer appearance-none pr-4 mr-2 border-r border-gray-300"
-                                        defaultValue="+91"
-                                    >
-                                        <option value="+91">+91 (IN)</option>
-                                        <option value="+1">+1 (CA)</option>
-                                        <option value="+1">+1 (US)</option>
-                                        <option value="+44">+44 (UK)</option>
-                                        <option value="+61">+61 (AU)</option>
-                                        <option value="+971">+971 (AE)</option>
-                                    </select>
-                                    <input
-                                        type="tel"
-                                        id="phone"
-                                        required
-                                        pattern="[0-9]{10}"
-                                        title="Please enter exactly 10 digits."
-                                        className="w-full bg-transparent outline-none text-lg text-black placeholder-gray-300 pl-2"
-                                        placeholder="98765 43210"
-                                    />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                                <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
+                                    <label htmlFor="name" className="block text-xs uppercase tracking-widest text-muted mb-2">Names</label>
+                                    <input type="text" id="name" name="name" required className="w-full bg-transparent outline-none text-lg text-black placeholder-gray-300" placeholder="Jane & John" />
+                                </div>
+                                <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
+                                    <label htmlFor="date" className="block text-xs uppercase tracking-widest text-muted mb-2">Event Date</label>
+                                    <input type="text" id="date" name="date" required className="w-full bg-transparent outline-none text-lg text-black placeholder-gray-300" placeholder="e.g. Sept 2025" />
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
-                            <label htmlFor="venue" className="block text-xs uppercase tracking-widest text-muted mb-2">Venue / Location</label>
-                            <input type="text" id="venue" className="w-full bg-transparent outline-none text-lg text-black placeholder-gray-300" placeholder="Where is the magic happening?" />
-                        </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                                <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
+                                    <label htmlFor="email" className="block text-xs uppercase tracking-widest text-muted mb-2">Email Address</label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        required
+                                        pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
+                                        title="Please enter a valid email address."
+                                        className="w-full bg-transparent outline-none text-lg text-black placeholder-gray-300"
+                                        placeholder="hello@example.com"
+                                    />
+                                </div>
+                                <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
+                                    <label htmlFor="phone" className="block text-xs uppercase tracking-widest text-muted mb-2">Phone Number</label>
+                                    <div className="flex items-center">
+                                        <select
+                                            name="phonePrefix"
+                                            className="bg-transparent outline-none text-lg text-black cursor-pointer appearance-none pr-4 mr-2 border-r border-gray-300"
+                                            defaultValue="+91"
+                                        >
+                                            <option value="+91">+91 (IN)</option>
+                                            <option value="+1">+1 (CA)</option>
+                                            <option value="+1">+1 (US)</option>
+                                            <option value="+44">+44 (UK)</option>
+                                            <option value="+61">+61 (AU)</option>
+                                            <option value="+971">+971 (AE)</option>
+                                        </select>
+                                        <input
+                                            type="tel"
+                                            id="phone"
+                                            name="phone"
+                                            required
+                                            pattern="[0-9]{10}"
+                                            title="Please enter exactly 10 digits."
+                                            className="w-full bg-transparent outline-none text-lg text-black placeholder-gray-300 pl-2"
+                                            placeholder="98765 43210"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
 
-                        <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
-                            <label htmlFor="budget" className="block text-xs uppercase tracking-widest text-muted mb-2">Estimated Coverage Budget</label>
-                            <select id="budget" className="w-full bg-transparent outline-none text-lg text-black cursor-pointer appearance-none">
-                                <option value="Select">Under 1.5 Lakh</option>
-                                <option value="1.5-3L">₹1.5 Lakh - ₹3 Lakh</option>
-                                <option value="3L+">₹3 Lakh+</option>
-                            </select>
-                        </div>
+                            <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
+                                <label htmlFor="venue" className="block text-xs uppercase tracking-widest text-muted mb-2">Venue / Location</label>
+                                <input type="text" id="venue" name="venue" className="w-full bg-transparent outline-none text-lg text-black placeholder-gray-300" placeholder="Where is the magic happening?" />
+                            </div>
 
-                        <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors h-32">
-                            <label htmlFor="details" className="block text-xs uppercase tracking-widest text-muted mb-2">Tell us about your vision</label>
-                            <textarea id="details" className="w-full h-full bg-transparent outline-none text-lg text-black resize-none placeholder-gray-300" placeholder="Aesthetic, guests, specific moments..."></textarea>
-                        </div>
+                            <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors">
+                                <label htmlFor="budget" className="block text-xs uppercase tracking-widest text-muted mb-2">Estimated Coverage Budget</label>
+                                <select id="budget" name="budget" className="w-full bg-transparent outline-none text-lg text-black cursor-pointer appearance-none">
+                                    <option value="Select">Under 1.5 Lakh</option>
+                                    <option value="1.5-3L">₹1.5 Lakh - ₹3 Lakh</option>
+                                    <option value="3L+">₹3 Lakh+</option>
+                                </select>
+                            </div>
 
-                        <button type="submit" className="w-full md:w-auto bg-black text-white px-12 py-5 uppercase tracking-widest text-sm hover:bg-gray-800 transition-colors">
-                            Submit Inquiry
-                        </button>
-                    </form>
+                            <div className="relative border-b border-gray-300 pb-2 focus-within:border-black transition-colors h-32">
+                                <label htmlFor="details" className="block text-xs uppercase tracking-widest text-muted mb-2">Tell us about your vision</label>
+                                <textarea id="details" name="details" className="w-full h-full bg-transparent outline-none text-lg text-black resize-none placeholder-gray-300" placeholder="Aesthetic, guests, specific moments..."></textarea>
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="w-full md:w-auto bg-black text-white px-12 py-5 uppercase tracking-widest text-sm hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {isSubmitting ? "Sending..." : "Submit Inquiry"}
+                            </button>
+                        </form>
+                    )}
                 </motion.div>
             </div>
             {/* Divider Line */}
@@ -127,12 +178,8 @@ export default function Contact() {
             </div>
             {/* Visit Us Section */}
             <section className="py-20 border-t border-neutral-100 pb-40">
-                {/* Reduced max-width from 1600px to 1200px for better focus */}
                 <div className="max-w-[1200px] mx-auto px-8 md:px-12">
-                    {/* Adjusted gap from 20 to 12 for a tighter, more editorial feel */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 items-center">
-
-                        {/* Left Column: Text */}
                         <div className="space-y-6 md:space-y-8">
                             <h2 className="font-serif text-3xl md:text-4xl tracking-tight uppercase">
                                 Drop by our studio
@@ -156,7 +203,6 @@ export default function Contact() {
                             </a>
                         </div>
 
-                        {/* Right Column: Map */}
                         <div className="relative aspect-square md:aspect-video lg:aspect-square w-full rounded-2xl overflow-hidden border border-neutral-100 shadow-sm">
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14013.437343513686!2d77.060136!3d28.589016!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d1b3b0e133fed%3A0xbbfb6353e190354a!2sMomentz%20Gallery%20%7C%7C%20Wedding%20Photographers%20in%20Delhi%20%7C%7C!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
